@@ -4,13 +4,12 @@ import finalTask.model.Subtask;
 import finalTask.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Manager {
     private int setId = 1;
-    HashMap<Integer,Epic> epics = new HashMap<>();
-    HashMap<Integer,Task> tasks = new HashMap<>();
-    HashMap<Integer,Subtask> subtasks = new HashMap<>();
+    private HashMap<Integer,Epic> epics = new HashMap<>();
+    private HashMap<Integer,Task> tasks = new HashMap<>();
+    private HashMap<Integer,Subtask> subtasks = new HashMap<>();
 
     public HashMap<Integer, Epic> getAllEpic() {
         return epics;
@@ -97,8 +96,10 @@ public class Manager {
     }
 
     public void deleteByIdSubtask(int id) {
+        int idEpic = subtasks.get(id).getEpicId();
         epics.get(subtasks.get(id).getEpicId()).removeIdSubtask(id);
         subtasks.remove(id);
+        setEpicStatus(epics.get(idEpic));
     }
 
     public void deleteByIdTask(int id) {
@@ -113,7 +114,7 @@ public class Manager {
         return subtasksByEpic;
     }
 
-    public void setEpicStatus(Epic epic) {
+    private void setEpicStatus(Epic epic) {
         int doneSubtask = 0;
         int inProgressSubtask = 0;
         ArrayList<Subtask> subtasksByEpic = new ArrayList<>();
