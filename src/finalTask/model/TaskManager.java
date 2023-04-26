@@ -1,11 +1,11 @@
 package finalTask.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface TaskManager <T extends Task> {
 
-    public HashMap<Integer, T> getAllTask(T task);
+    public Map<Integer, T> getAllTask(T task);
 
     public void clearAllTask(T task);
 
@@ -17,4 +17,5 @@ public interface TaskManager <T extends Task> {
 
     public void deleteByIdTask(T task, int id);
 
+    public List<Task> getHistory();
 }

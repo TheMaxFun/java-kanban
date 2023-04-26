@@ -3,42 +3,23 @@ package finalTask.service;
 import finalTask.model.HistoryManager;
 import finalTask.model.Task;
 
+import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static int setNumber = 0;
-
-    private ArrayList<Task> historyList = new ArrayList<>();
-    private HashMap<Integer, Task> history = new HashMap<>();
+    private List<Task> historyList = new ArrayList<>();
 
     @Override
-    public ArrayList<Task> getHistory() {
-        for (int i = 0; i < history.size(); i++) {
-            historyList.add(history.get(i));
-        }
+    public List<Task> getHistory() {
         return historyList;
     }
 
     @Override
     public void add(Task task) {
-        putInHistory(task);
-    }
-    private void checkNumber() {
-        if (setNumber >= 10) {
-            setNumber = 0;
+        if (historyList.size() >=10 ) {
+            historyList.remove(historyList.size()-1);
         }
-    }
-
-    public void putInHistory(Task task) {
-        if (history.containsKey(setNumber)) {
-            history.remove(setNumber);
-            history.put(setNumber, task);
-        } else {
-            history.put(setNumber, task);
-        }
-        setNumber++;
-        checkNumber();
+        historyList.add(task);
     }
 }
