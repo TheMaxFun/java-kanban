@@ -1,4 +1,6 @@
-package finalTask.model;
+package finalTask.service;
+
+import finalTask.model.Task;
 
 import java.util.List;
 

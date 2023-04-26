@@ -1,9 +1,6 @@
-package finalTask.model;
+package finalTask.service;
 
-import finalTask.service.InMemoryHistoryManager;
-import finalTask.service.InMemoryTaskManager;
-
-public class Managers{
+public class Managers {
 
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
