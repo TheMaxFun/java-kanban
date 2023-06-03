@@ -2,18 +2,33 @@ package finalTask.service;
 
 import finalTask.model.Task;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class ModeLinkedList<T extends Task> {
-    public Map<Integer, Node> hashMap = new HashMap<>();
+    private final Map<Integer, Node<T>> hashMap = new HashMap<>();
 
-    class Node<E> {
+    private List<Integer> idsList = new ArrayList<>();
+
+    private static class Node<E> {
         public E data;
         public Node<E> next;
         public Node<E> prev;
+
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> next) {
+            this.next = next;
+        }
+
+        public Node<E> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<E> prev) {
+            this.prev = prev;
+        }
 
         public Node(Node<E> prev, E data, Node<E> next) {
             this.data = data;
@@ -27,12 +42,12 @@ public class ModeLinkedList<T extends Task> {
     private int size = 0;
 
     public void addFirst(T element, int id) {
+        if (hashMap.containsKey(id)) {
+            remove(hashMap.get(id));
+            hashMap.remove(id);
+        }
         final Node<T> oldHead = head;
         final Node<T> newNode = new Node<>(null, element, oldHead);
-        if (hashMap.containsValue(newNode)) {
-            remove(hashMap.get(newNode));
-            hashMap.remove(newNode);
-        }
         addInMap(id, newNode);
         head = newNode;
         if (oldHead == null) {
@@ -41,10 +56,6 @@ public class ModeLinkedList<T extends Task> {
             oldHead.prev = newNode;
         }
         size++;
-        if (hashMap.size() > 10) {
-            remove(tail);
-            hashMap.remove(hashMap.size() - 1);
-        }
     }
 
     public T getFirst() {
@@ -52,6 +63,16 @@ public class ModeLinkedList<T extends Task> {
         if (curHead == null)
             throw new NoSuchElementException();
         return head.data;
+    }
+
+    public List<Task> getTask() {
+        List<Task> nodeData = new ArrayList<>();
+        Node<T> supportElement = head;
+        while (supportElement != null) {
+            nodeData.add(supportElement.data);
+            supportElement = supportElement.next;
+        }
+        return nodeData;
     }
 
     public void addLast(T element) {
@@ -78,29 +99,41 @@ public class ModeLinkedList<T extends Task> {
     }
 
     public void remove(int id) {
-        Node removeNode = findElement(id);
+        Node<T> removeNode = findElement(id);
+        Node<T> next = removeNode.next;
+        Node<T> prev = removeNode.prev;
         if (removeNode == head) {
-            head = removeNode.next;
-        } else {
-            removeNode.prev = removeNode.next;
-        }
-    }
-
-    public void remove(Node removeNode) {
-        if (removeNode == head) {
-            head = removeNode.next;
+            next.setPrev(null);
+            head = next;
         } else if (removeNode == tail) {
-            tail = removeNode.prev;
+            prev.setNext(null);
+            tail = prev;
         } else {
-            removeNode.prev = removeNode.next;
+            next.setPrev(prev);
+            prev.setNext(next);
         }
     }
 
-    public Node findElement(int id) {
+    public void remove(Node<T> removeNode) {
+        Node<T> next = removeNode.next;
+        Node<T> prev = removeNode.prev;
+        if (removeNode == head) {
+            next.setPrev(null);
+            head = next;
+        } else if (removeNode == tail) {
+            prev.setNext(null);
+            tail = prev;
+        } else {
+            next.setPrev(prev);
+            prev.setNext(next);
+        }
+    }
+
+    private Node<T> findElement(int id) {
         return hashMap.get(id);
     }
 
-    public void addInMap(int id, Node newNode) {
+    private void addInMap(int id, Node<T> newNode) {
         hashMap.put(id, newNode);
     }
 }

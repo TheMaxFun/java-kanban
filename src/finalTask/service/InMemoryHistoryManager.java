@@ -5,12 +5,12 @@ import finalTask.model.Task;
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private ModeLinkedList<Task> historyList = new ModeLinkedList<>();
+    private final ModeLinkedList<Task> historyList = new ModeLinkedList<>();
 
     @Override
     public ArrayList<Task> getHistory() {
-        ArrayList<Task> history = new ArrayList<>();
-        return history;
+        ArrayList<Task> history = new ArrayList<>(historyList.getTask());
+        return new ArrayList<>(history);
     }
 
     @Override
