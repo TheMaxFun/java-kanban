@@ -7,8 +7,6 @@ import java.util.*;
 public class ModeLinkedList<T extends Task> {
     private final Map<Integer, Node<T>> hashMap = new HashMap<>();
 
-    private List<Integer> idsList = new ArrayList<>();
-
     private static class Node<E> {
         public E data;
         public Node<E> next;
@@ -43,7 +41,7 @@ public class ModeLinkedList<T extends Task> {
 
     public void addFirst(T element, int id) {
         if (hashMap.containsKey(id)) {
-            remove(hashMap.get(id));
+            remove(id);
             hashMap.remove(id);
         }
         final Node<T> oldHead = head;
@@ -55,7 +53,6 @@ public class ModeLinkedList<T extends Task> {
         } else {
             oldHead.prev = newNode;
         }
-        size++;
     }
 
     public T getFirst() {
@@ -98,7 +95,7 @@ public class ModeLinkedList<T extends Task> {
         return this.size;
     }
 
-    public void remove(int id) {
+    protected void remove(int id) {
         Node<T> removeNode = findElement(id);
         Node<T> next = removeNode.next;
         Node<T> prev = removeNode.prev;
@@ -112,21 +109,7 @@ public class ModeLinkedList<T extends Task> {
             next.setPrev(prev);
             prev.setNext(next);
         }
-    }
-
-    public void remove(Node<T> removeNode) {
-        Node<T> next = removeNode.next;
-        Node<T> prev = removeNode.prev;
-        if (removeNode == head) {
-            next.setPrev(null);
-            head = next;
-        } else if (removeNode == tail) {
-            prev.setNext(null);
-            tail = prev;
-        } else {
-            next.setPrev(prev);
-            prev.setNext(next);
-        }
+        hashMap.remove(id);
     }
 
     private Node<T> findElement(int id) {
