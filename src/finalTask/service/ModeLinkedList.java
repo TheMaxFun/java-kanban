@@ -37,7 +37,6 @@ public class ModeLinkedList<T extends Task> {
 
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
 
     public void addFirst(T element, int id) {
         if (hashMap.containsKey(id)) {
@@ -81,7 +80,6 @@ public class ModeLinkedList<T extends Task> {
         } else {
             head = newNode;
         }
-        size++;
     }
 
     public T getLast() {
@@ -91,25 +89,26 @@ public class ModeLinkedList<T extends Task> {
         return tail.data;
     }
 
-    public int size() {
-        return this.size;
-    }
-
     protected void remove(int id) {
         Node<T> removeNode = findElement(id);
-        Node<T> next = removeNode.next;
-        Node<T> prev = removeNode.prev;
-        if (removeNode == head) {
-            next.setPrev(null);
-            head = next;
-        } else if (removeNode == tail) {
-            prev.setNext(null);
-            tail = prev;
-        } else {
-            next.setPrev(prev);
-            prev.setNext(next);
+        if (findElement(id) != null) {
+            Node<T> next = removeNode.next;
+            Node<T> prev = removeNode.prev;
+            if (next == null && prev == null) {
+                head = null;
+                tail = null;
+            } else if (removeNode == head) {
+                next.setPrev(null);
+                head = next;
+            } else if (removeNode == tail) {
+                prev.setNext(null);
+                tail = prev;
+            } else {
+                next.setPrev(prev);
+                prev.setNext(next);
+            }
+            hashMap.remove(id);
         }
-        hashMap.remove(id);
     }
 
     private Node<T> findElement(int id) {

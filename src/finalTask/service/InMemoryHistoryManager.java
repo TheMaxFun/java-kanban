@@ -2,15 +2,14 @@ package finalTask.service;
 
 import finalTask.model.Task;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final ModeLinkedList<Task> historyList = new ModeLinkedList<>();
 
     @Override
-    public ArrayList<Task> getHistory() {
-        ArrayList<Task> history = new ArrayList<>(historyList.getTask());
-        return new ArrayList<>(history);
+    public List<Task> getHistory() {
+        return historyList.getTask();
     }
 
     @Override
