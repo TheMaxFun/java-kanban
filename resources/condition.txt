@@ -1,0 +1,8 @@
+id,type,name,status,description,epic
+2,TASK,w,DONE,w
+4,SUBTASK,zvs,IN_PROGRESS,wiqw,3
+5,SUBTASK,qwe,NEW,sasaf,3
+6,SUBTASK,wer,NEW,saf,3
+7,EPIC,sq,NEW,vf
+
+[4, 6, 5, 7, 2]

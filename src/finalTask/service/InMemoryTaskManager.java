@@ -160,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private void setEpicStatus(Epic epic) {
+    public void setEpicStatus(Epic epic) {
         int doneSubtask = 0;
         int inProgressSubtask = 0;
         List<Subtask> subtasksByEpic = new ArrayList<>();
