@@ -1,5 +1,9 @@
 package finalTask.model;
 
+import finalTask.service.ManagerSaveException;
+
+import static finalTask.model.Type.TASK;
+
 public class Task {
     protected String title;
     protected String description;
@@ -43,6 +47,17 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDescriptionTask(Task task) throws ManagerSaveException {
+        try {
+            String id = "" + task.getId();
+            String status = "" + task.getStatus();
+            String type = "" + TASK;
+            return String.join(",", id, type, task.getTitle(), status, task.getDescription());
+        } catch (Exception exception) {
+            throw new ManagerSaveException();
+        }
     }
 }
 

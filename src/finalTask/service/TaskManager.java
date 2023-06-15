@@ -9,11 +9,11 @@ import java.util.Map;
 
 public interface TaskManager {
 
-    public Map<Integer, Epic> getAllEpic();
+    public List<Epic> getAllEpic();
 
-    public Map<Integer, Subtask> getAllSubtasks();
+    public List<Subtask> getAllSubtasks();
 
-    public Map<Integer, Task> getAllTask();
+    public List<Task> getAllTask();
 
     public void clearAllEpic();
 
