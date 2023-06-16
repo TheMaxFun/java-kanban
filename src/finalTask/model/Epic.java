@@ -28,14 +28,9 @@ public class Epic extends Task {
         idSubtasks = null;
     }
 
-    public String getDescriptionEpic (Epic epic) throws ManagerSaveException {
-        try {
-            String id = "" + epic.getId();
-            String status = "" + epic.getStatus();
-            String type = "" + EPIC;
-            return String.join(",", id, type, epic.getTitle(), status, epic.getDescription());
-        } catch (Exception exception) {
-            throw new ManagerSaveException();
-        }
+    @Override
+    public String getDescriptionTask (Type type) {
+        String str = super.getDescriptionTask(type);
+        return String.join(",", str, "\n");
     }
 }

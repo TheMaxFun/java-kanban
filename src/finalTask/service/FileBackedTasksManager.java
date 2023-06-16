@@ -63,24 +63,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try (PrintWriter writer = new PrintWriter(new File("./resources/condition.txt"))) {
             writer.write(form);
             for (Task task : super.getAllTask()) {
-                writer.write(task.getDescriptionTask(task));
+                writer.write(task.getDescriptionTask(TASK));
                 writer.write("\n");
             }
             for (Subtask subtask : super.getAllSubtasks()) {
-                writer.write(subtask.getDescriptionSubtask(subtask));
-                writer.write("\n");
+                writer.write(subtask.getDescriptionTask(SUBTASK));
             }
             for (Epic epic : super.getAllEpic()) {
-                writer.write(epic.getDescriptionEpic(epic));
-                writer.write("\n");
+                writer.write(epic.getDescriptionTask(EPIC));
             }
-            writer.write("\n");
             for (Task id : super.getHistory()) {
                 idsList.add(id.getId());
             }
+            writer.write("\n");
             writer.write(idsList.toString());
         } catch (FileNotFoundException e) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException("Ошибка при сохранении");
         }
     }
 
@@ -106,24 +104,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
         return null;
     }
-    public int toInt (String str) {
+
+    public int toInt(String str) {
         int integ = Integer.parseInt(str);
         return integ;
     }
 
-    public Status getStatus (String str) throws GetStatusException {
-            if (str.equals("NEW")) {
-                return Status.NEW;
-            } else if (str.equals("IN_PROGRESS")) {
-                return Status.IN_PROGRESS;
-            } else if (str.equals("DONE")) {
-                return Status.DONE;
-            } else {
-                throw new GetStatusException("Ошибка, неправильный статус");
-            }
+    public Status getStatus(String str) throws GetStatusException {
+        if (str.equals("NEW")) {
+            return Status.NEW;
+        } else if (str.equals("IN_PROGRESS")) {
+            return Status.IN_PROGRESS;
+        } else if (str.equals("DONE")) {
+            return Status.DONE;
+        } else {
+            throw new GetStatusException("Ошибка, неправильный статус");
+        }
     }
 
-    public Type getType (String str) throws GetTypeException {
+    public Type getType(String str) throws GetTypeException {
         if (str.equals("TASK")) {
             return Type.TASK;
         } else if (str.equals("SUBTASK")) {
@@ -139,17 +138,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         FileReader reader = new FileReader(file.getPath());
         BufferedReader br = new BufferedReader(reader);
         List<String> lines = new ArrayList<>();
-            while (br.ready()) {
-                String line = br.readLine();
-                lines.add(line);
-            }
+        while (br.ready()) {
+            String line = br.readLine();
+            lines.add(line);
+        }
         for (int i = 1; i < lines.size() - 2; ++i) {
             if (!lines.get(i).isEmpty()) {
                 Task task;
                 try {
                     task = fromString(lines.get(i));
                 } catch (ManagerSaveException | GetStatusException | GetTypeException e) {
-                    throw new ManagerSaveException();
+                    throw new ManagerSaveException("Ошибка при загрузке");
                 }
                 if (task instanceof Subtask) {
                     createSubtask((Subtask) task);
@@ -160,131 +159,96 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 }
             }
         }
+        String[] split = lines.get(lines.size() - 1).split(", ");
+        for (String line : split) {
+            if (super.getByIdTask(toInt(line)) != null) {
+                super.getByIdTask(toInt(line));
+            } else if (super.getByIdSubtask(toInt(line)) != null) {
+                super.getByIdSubtask(toInt(line));
+            } else if (super.getByIdEpic(toInt(line)) != null) {
+                super.getByIdEpic(toInt(line));
+            }
+        }
+        for (Subtask subtask : super.getAllSubtasks()) {
+            super.getAllEpic().get(subtask.getEpicId()).addIdSubtask(subtask.getId());
+        }
         br.close();
         return new FileBackedTasksManager();
     }
 
     @Override
     public void createSubtask(Subtask subtask) {
-        try {
-            super.createSubtask(subtask);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.subtasks.put(subtask.getId(), subtask);
+        super.epics.get(subtask.getEpicId()).addIdSubtask(subtask.getId());
+        save();
     }
 
     @Override
     public void createTask(Task task) {
-        try {
-            super.createTask(task);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.tasks.put(task.getId(), task);
+        save();
     }
 
     @Override
     public void createEpicTask(Epic epic) {
-        try {
-            super.createEpicTask(epic);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.epics.put(epic.getId(), epic);
+        save();
     }
 
     @Override
     public void clearAllEpic() {
-        try {
-            super.clearAllEpic();
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.clearAllEpic();
+        save();
     }
 
     @Override
     public void clearAllTask() {
-        try {
-            super.clearAllTask();
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.clearAllTask();
+        save();
     }
 
     @Override
     public void clearAllSubtask() {
-        try {
-            super.clearAllSubtask();
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.clearAllSubtask();
+        save();
     }
 
     @Override
     public Epic getByIdEpic(int id) {
         super.getByIdEpic(id);
-            try {
-                save();
-            } catch (ManagerSaveException e) {
-                throw new RuntimeException(e);
-            }
-            return super.getByIdEpic(id);
-        }
+        save();
+        return super.getByIdEpic(id);
+    }
 
     @Override
     public Subtask getByIdSubtask(int id) {
         super.getByIdSubtask(id);
-            try {
-                save();
-            } catch (ManagerSaveException e) {
-                throw new RuntimeException(e);
-            }
-            return super.getByIdSubtask(id);
-        }
+        save();
+        return super.getByIdSubtask(id);
+    }
 
     @Override
-    public Task getByIdTask (int id) {
+    public Task getByIdTask(int id) {
         super.getByIdTask(id);
-            try {
-                save();
-            } catch (ManagerSaveException e) {
-                throw new RuntimeException(e);
-            }
-            return super.getByIdTask(id);
-        }
+        save();
+        return super.getByIdTask(id);
+    }
 
     @Override
     public void deleteByIdEpic(int id) {
-        try {
-            super.deleteByIdEpic(id);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.deleteByIdEpic(id);
+        save();
     }
 
     @Override
     public void deleteByIdSubtask(int id) {
-        try {
-            super.deleteByIdSubtask(id);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.deleteByIdSubtask(id);
+        save();
     }
 
     @Override
     public void deleteByIdTask(int id) {
-        try {
-            super.deleteByIdTask(id);
-            save();
-        } catch (ManagerSaveException e) {
-            throw new RuntimeException(e);
-        }
+        super.deleteByIdTask(id);
+        save();
     }
 }
-

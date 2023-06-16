@@ -49,15 +49,11 @@ public class Task {
         this.id = id;
     }
 
-    public String getDescriptionTask(Task task) throws ManagerSaveException {
-        try {
-            String id = "" + task.getId();
-            String status = "" + task.getStatus();
-            String type = "" + TASK;
-            return String.join(",", id, type, task.getTitle(), status, task.getDescription());
-        } catch (Exception exception) {
-            throw new ManagerSaveException();
-        }
+    public String getDescriptionTask(Type type) {
+            String id = "" + getId();
+            String status = "" + getStatus();
+            String typeToString = "" + type;
+            return String.join(",", id, typeToString, getTitle(), status, getDescription());
     }
 }
 

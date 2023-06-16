@@ -1,10 +1,10 @@
 id,type,name,status,description,epic
 1,TASK,q,NEW,q
 2,TASK,w,DONE,w
-5,SUBTASK,zvs,IN_PROGRESS,wiqw,3
-6,SUBTASK,qwe,NEW,sasaf,3
-7,SUBTASK,wer,NEW,saf,3
-3,EPIC,sa,IN_PROGRESS,vz
-4,EPIC,sq,NEW,vf
+4,SUBTASK,zvs,IN_PROGRESS,wiqw,3,
+5,SUBTASK,qwe,NEW,sasaf,3,
+6,SUBTASK,wer,NEW,saf,3,
+3,EPIC,sa,IN_PROGRESS,vz,
+7,EPIC,sq,NEW,vf,
 
-[5, 7, 6, 4, 3, 2, 1]
+[4, 6, 5, 7, 3, 2, 1]

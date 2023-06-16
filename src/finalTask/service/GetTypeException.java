@@ -1,8 +1,7 @@
 package finalTask.service;
 
-public class GetTypeException extends Exception {
-    String s;
-    public GetTypeException(String s) {
-        this.s = s;
+public class GetTypeException extends RuntimeException {
+    public GetTypeException(final String message) {
+        super(message);
     }
 }

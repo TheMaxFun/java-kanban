@@ -20,15 +20,10 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-     public String getDescriptionSubtask(Subtask subtask) throws ManagerSaveException {
-        try {
-            String id = "" + subtask.getId();
-            String status = "" + subtask.getStatus();
-            String type = "" + SUBTASK;
-            String epicId = "" + subtask.getEpicId();
-            return String.join(",", id, type, subtask.getTitle(), status, subtask.getDescription(), epicId);
-        } catch (Exception exception) {
-            throw new ManagerSaveException();
-        }
-     }
+    @Override
+    public String getDescriptionTask(Type type) {
+        String str = super.getDescriptionTask(type);
+        String epicId = "" + getEpicId();
+        return String.join(",", str, epicId, "\n");
+    }
 }
