@@ -1,9 +1,5 @@
 package finalTask.model;
 
-import finalTask.service.ManagerSaveException;
-
-import static finalTask.model.Type.TASK;
-
 public class Task {
     protected String title;
     protected String description;

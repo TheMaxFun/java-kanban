@@ -1,17 +1,12 @@
 package finalTask.model;
 
-import finalTask.service.ManagerSaveException;
-
 import java.util.ArrayList;
-
-import static finalTask.model.Type.EPIC;
 
 public class Epic extends Task {
     protected ArrayList <Integer> idSubtasks = new ArrayList<>();
 
     public Epic(String title, String description, Status status, int id) {
         super(title, description, status, id);
-        this.idSubtasks = idSubtasks;
     }
 
     public ArrayList<Integer> getIdSubtasks() {
@@ -31,6 +26,6 @@ public class Epic extends Task {
     @Override
     public String getDescriptionTask (Type type) {
         String str = super.getDescriptionTask(type);
-        return String.join(",", str, "\n");
+        return String.join(",", str);
     }
 }
