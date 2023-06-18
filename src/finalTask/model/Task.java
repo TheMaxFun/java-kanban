@@ -3,8 +3,9 @@ package finalTask.model;
 public class Task {
     protected String title;
     protected String description;
-    protected Status status;
+    private Status status;
     protected int id;
+    private Type type = Type.TASK;
 
     public Task(String title, String description, Status status, int id) {
         this.title = title;
@@ -45,10 +46,19 @@ public class Task {
         this.id = id;
     }
 
-    public String getDescriptionTask(Type type) {
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+
+    public String getDescriptionTask() {
             String id = "" + getId();
             String status = "" + getStatus();
-            String typeToString = "" + type;
+            String typeToString = "" + getType();
             return String.join(",", id, typeToString, getTitle(), status, getDescription());
     }
 }

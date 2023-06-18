@@ -61,15 +61,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         try (PrintWriter writer = new PrintWriter(new File("./resources/condition.txt"))) {
             writer.write(form);
             for (Task task : super.getAllTask()) {
-                writer.write(task.getDescriptionTask(TASK));
+                writer.write(task.getDescriptionTask());
                 writer.write("\n");
             }
             for (Subtask subtask : super.getAllSubtasks()) {
-                writer.write(subtask.getDescriptionTask(SUBTASK));
+                writer.write(subtask.getDescriptionTask());
                 writer.write("\n");
             }
             for (Epic epic : super.getAllEpic()) {
-                writer.write(epic.getDescriptionTask(EPIC));
+                writer.write(epic.getDescriptionTask());
                 writer.write("\n");
             }
             for (Task id : super.getHistory()) {
@@ -139,11 +139,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public static FileBackedTasksManager loadFromFile(File file) throws IOException, ManagerSaveException {
 
+        FileBackedTasksManager manager = new FileBackedTasksManager();
         HashMap<Integer,Epic> epics = new HashMap<>();
         HashMap<Integer,Task> tasks = new HashMap<>();
         HashMap<Integer,Subtask> subtasks = new HashMap<>();
 
-        FileBackedTasksManager manager = new FileBackedTasksManager();
         FileReader reader = new FileReader(file.getPath());
         BufferedReader br = new BufferedReader(reader);
         List<String> lines = new ArrayList<>();
@@ -161,12 +161,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 }
                 if (task instanceof Subtask) {
                     Subtask subtask = (Subtask) task;
-                    subtasks.put(subtask.getId(), subtask);
+                    manager.subtasks.put(subtask.getId(), subtask);
                 } else if (task instanceof Epic) {
                     Epic epic = (Epic) task;
-                    epics.put(epic.getId(), epic);
+                    manager.epics.put(epic.getId(), epic);
                 } else {
-                    tasks.put(task.getId(), task);
+                    manager.tasks.put(task.getId(), task);
                 }
             }
         }
@@ -223,20 +223,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Epic getByIdEpic(int id) {
+        Epic epic = super.getByIdEpic(id);
         save();
-        return super.getByIdEpic(id);
+        return epic;
     }
 
     @Override
     public Subtask getByIdSubtask(int id) {
+        Subtask subtask = super.getByIdSubtask(id);
         save();
-        return super.getByIdSubtask(id);
+        return subtask;
     }
 
     @Override
     public Task getByIdTask(int id) {
+        Task task = super.getByIdTask(id);
         save();
-        return super.getByIdTask(id);
+        return task;
     }
 
     @Override
